@@ -8,7 +8,18 @@
     in
     {
       devShells.x86_64-linux.default = pkgs.mkShell {
-        buildInputs = with pkgs; [ libsodium socat trurl ];
+        buildInputs = with pkgs; [
+          # Compilers:
+          gcc
+          rustc
+          # (+ a build system for Rust):
+          cargo
+          # To generate random bytes:
+          libsodium
+          # For `{sign,verify}.sh`:
+          socat
+          trurl
+        ];
       };
     };
 }
