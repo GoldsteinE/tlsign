@@ -156,7 +156,7 @@ int main(int argc, char** argv, char** envp) {
 									/* riovcnt = */ 1,
 									/* flags = */ 0
 								) == -1) {
-									perror("process_vm_readv");
+									perror("process_vm_writev");
 									return 1;
 								}
 							}
