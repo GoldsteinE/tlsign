@@ -38,6 +38,12 @@ void dbg(const char* fmt, ...) {
 	va_end(args);
 }
 
+bool is_dns(const struct sockaddr_in* addr) {
+	uint16_t port = addr->sin_port;
+	// DNS and DNS-over-TLS respectively.
+	return port == htons(53) || port == htons(853);
+}
+
 int main(int argc, char** argv, char** envp) {
 	if (sodium_init() < 0) {
 		fprintf(stderr, "failed to initialize sodium\n");
@@ -137,7 +143,8 @@ int main(int argc, char** argv, char** envp) {
 								return 1;
 							}
 							// No IPv6 yet :(
-							if (host.sa_family == AF_INET) {
+							// We only want to patch the HTTP request, so we ignore DNS requests.
+							if (host.sa_family == AF_INET && !is_dns((struct sockaddr_in*) &host)) {
 								dbg("fixing up connect address at %p...\n", (void*) last_args[1]);
 								((struct sockaddr_in*) &host)->sin_addr.s_addr = htonl(0x7F000001); // localhost
 								((struct sockaddr_in*) &host)->sin_port = htons(44444);
