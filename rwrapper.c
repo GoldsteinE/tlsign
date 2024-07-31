@@ -182,6 +182,7 @@ int main(int argc, char** argv, char** envp) {
 								perror("process_vm_writev");
 								return 1;
 							}
+							free(tmp);
 						}
 						break;
 					default:
